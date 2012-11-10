@@ -17,13 +17,10 @@
 		D01B4457164EFF9F00842F7F /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B4456164EFF9F00842F7F /* Default@2x.png */; };
 		D01B4459164EFF9F00842F7F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B4458164EFF9F00842F7F /* Default-568h@2x.png */; };
 		D01B445C164EFF9F00842F7F /* MSFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B445B164EFF9F00842F7F /* MSFirstViewController.m */; };
-		D01B445E164EFF9F00842F7F /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B445D164EFF9F00842F7F /* first.png */; };
-		D01B4460164EFF9F00842F7F /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B445F164EFF9F00842F7F /* first@2x.png */; };
 		D01B4463164EFF9F00842F7F /* MSSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B4462164EFF9F00842F7F /* MSSecondViewController.m */; };
-		D01B4465164EFF9F00842F7F /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B4464164EFF9F00842F7F /* second.png */; };
-		D01B4467164EFF9F00842F7F /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B4466164EFF9F00842F7F /* second@2x.png */; };
 		D01B446A164EFF9F00842F7F /* MSFirstViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D01B4468164EFF9F00842F7F /* MSFirstViewController.xib */; };
 		D01B446D164EFF9F00842F7F /* MSSecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D01B446B164EFF9F00842F7F /* MSSecondViewController.xib */; };
+		D01B447B164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B447A164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,14 +39,12 @@
 		D01B4458164EFF9F00842F7F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		D01B445A164EFF9F00842F7F /* MSFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSFirstViewController.h; sourceTree = "<group>"; };
 		D01B445B164EFF9F00842F7F /* MSFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSFirstViewController.m; sourceTree = "<group>"; };
-		D01B445D164EFF9F00842F7F /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
-		D01B445F164EFF9F00842F7F /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
 		D01B4461164EFF9F00842F7F /* MSSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSSecondViewController.h; sourceTree = "<group>"; };
 		D01B4462164EFF9F00842F7F /* MSSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSSecondViewController.m; sourceTree = "<group>"; };
-		D01B4464164EFF9F00842F7F /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
-		D01B4466164EFF9F00842F7F /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
 		D01B4469164EFF9F00842F7F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MSFirstViewController.xib; sourceTree = "<group>"; };
 		D01B446C164EFF9F00842F7F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MSSecondViewController.xib; sourceTree = "<group>"; };
+		D01B4479164EFFDC00842F7F /* MSCachedAsyncViewDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCachedAsyncViewDrawing.h; sourceTree = SOURCE_ROOT; };
+		D01B447A164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSCachedAsyncViewDrawing.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				D01B4448164EFF9F00842F7F /* MSCachedAsyncViewDrawing-SampleProject */,
+				D01B4478164EFFC400842F7F /* MSCachedAsyncViewDrawing */,
 				D01B4441164EFF9F00842F7F /* Frameworks */,
 				D01B443F164EFF9F00842F7F /* Products */,
 			);
@@ -100,12 +96,8 @@
 				D01B4452164EFF9F00842F7F /* MSAppDelegate.m */,
 				D01B445A164EFF9F00842F7F /* MSFirstViewController.h */,
 				D01B445B164EFF9F00842F7F /* MSFirstViewController.m */,
-				D01B445D164EFF9F00842F7F /* first.png */,
-				D01B445F164EFF9F00842F7F /* first@2x.png */,
 				D01B4461164EFF9F00842F7F /* MSSecondViewController.h */,
 				D01B4462164EFF9F00842F7F /* MSSecondViewController.m */,
-				D01B4464164EFF9F00842F7F /* second.png */,
-				D01B4466164EFF9F00842F7F /* second@2x.png */,
 				D01B4468164EFF9F00842F7F /* MSFirstViewController.xib */,
 				D01B446B164EFF9F00842F7F /* MSSecondViewController.xib */,
 				D01B4449164EFF9F00842F7F /* Supporting Files */,
@@ -125,6 +117,16 @@
 				D01B4458164EFF9F00842F7F /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D01B4478164EFFC400842F7F /* MSCachedAsyncViewDrawing */ = {
+			isa = PBXGroup;
+			children = (
+				D01B4479164EFFDC00842F7F /* MSCachedAsyncViewDrawing.h */,
+				D01B447A164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m */,
+			);
+			name = MSCachedAsyncViewDrawing;
+			path = "MSCachedAsyncViewDrawing-SampleProject";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,10 +185,6 @@
 				D01B4455164EFF9F00842F7F /* Default.png in Resources */,
 				D01B4457164EFF9F00842F7F /* Default@2x.png in Resources */,
 				D01B4459164EFF9F00842F7F /* Default-568h@2x.png in Resources */,
-				D01B445E164EFF9F00842F7F /* first.png in Resources */,
-				D01B4460164EFF9F00842F7F /* first@2x.png in Resources */,
-				D01B4465164EFF9F00842F7F /* second.png in Resources */,
-				D01B4467164EFF9F00842F7F /* second@2x.png in Resources */,
 				D01B446A164EFF9F00842F7F /* MSFirstViewController.xib in Resources */,
 				D01B446D164EFF9F00842F7F /* MSSecondViewController.xib in Resources */,
 			);
@@ -203,6 +201,7 @@
 				D01B4453164EFF9F00842F7F /* MSAppDelegate.m in Sources */,
 				D01B445C164EFF9F00842F7F /* MSFirstViewController.m in Sources */,
 				D01B4463164EFF9F00842F7F /* MSSecondViewController.m in Sources */,
+				D01B447B164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +326,7 @@
 				D01B4472164EFF9F00842F7F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
