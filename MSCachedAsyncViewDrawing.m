@@ -12,11 +12,48 @@
 
 @property (nonatomic, strong) NSCache *cache;
 
-@property (nonatomic, strong) dispatch_queue_t dispatchQueue;
+@property (nonatomic, strong) NSOperationQueue *operationQueue;
+
+@end
+
+@interface _MSViewDrawingOperation : NSBlockOperation
+
+@property (nonatomic, strong) UIImage *resultImage;
+
++ (_MSViewDrawingOperation *)viewDrawingBlockOperationWithBlock:(void (^)(_MSViewDrawingOperation *))block;
+
+@end
+
+@implementation _MSViewDrawingOperation
+
++ (_MSViewDrawingOperation *)viewDrawingBlockOperationWithBlock:(void (^)(_MSViewDrawingOperation *))block
+{
+    UIImage * (^heapBlock)(_MSViewDrawingOperation *) = [block copy];
+    _MSViewDrawingOperation *operation = [[self alloc] init];
+
+    __weak _MSViewDrawingOperation *weakOperation = operation;
+
+    [operation addExecutionBlock:^{
+        heapBlock(weakOperation);
+    }];
+
+    return operation;
+}
 
 @end
 
 @implementation MSCachedAsyncViewDrawing
+
+static NSOperationQueue *_sharedOperationQueue = nil;
+
++ (void)initialize
+{
+    if ([self class] == [MSCachedAsyncViewDrawing class])
+    {
+        _sharedOperationQueue = [[NSOperationQueue alloc] init];
+        _sharedOperationQueue.name = @"com.mindsnacks.view_drawing.queue";
+    }
+}
 
 + (MSCachedAsyncViewDrawing *)sharedInstance
 {
@@ -36,7 +73,7 @@
     {
         self.cache = [[NSCache alloc] init];
         self.cache.name = @"com.mindsnacks.view_drawing.cache";
-        self.dispatchQueue = dispatch_queue_create("com.mindsnacks.view_drawing.queue", DISPATCH_QUEUE_CONCURRENT);
+        self.operationQueue = _sharedOperationQueue;
     }
 
     return self;
@@ -44,28 +81,39 @@
 
 #pragma mark - Private
 
-- (void)drawViewWithCacheKey:(NSString *)cacheKey
-                        size:(CGSize)imageSize
-             backgroundColor:(UIColor *)backgroundColor
-                   drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
-             completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock
-               waitUntilDone:(BOOL)waitUntilDone
+- (NSOperation *)drawViewWithCacheKey:(NSString *)cacheKey
+                                 size:(CGSize)imageSize
+                      backgroundColor:(UIColor *)backgroundColor
+                            drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
+                      completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock
+                        waitUntilDone:(BOOL)waitUntilDone
 {
     UIImage *cachedImage = [self.cache objectForKey:cacheKey];
 
     if (cachedImage)
     {
         completionBlock(cachedImage);
-        return;
+        return nil;
     }
 
-    MSCachedAsyncViewDrawingDrawBlock _drawBlock = [drawBlock copy];
-    MSCachedAsyncViewDrawingCompletionBlock _completionBlock = [completionBlock copy];
-    
-    dispatch_block_t loadImageBlock = ^{
+    MSCachedAsyncViewDrawingDrawBlock heapDrawBlock = [drawBlock copy];
+    MSCachedAsyncViewDrawingCompletionBlock heapCompletionBlock = [completionBlock copy];
+
+    _MSViewDrawingOperation *operation = [_MSViewDrawingOperation viewDrawingBlockOperationWithBlock:^(_MSViewDrawingOperation *operation) {
+        if (operation.isCancelled)
+        {
+            return;
+        }
+
         BOOL opaque = [self colorIsOpaque:backgroundColor];
 
         UIGraphicsBeginImageContextWithOptions(imageSize, opaque, 0);
+
+        if (operation.isCancelled)
+        {
+            UIGraphicsEndImageContext();
+            return;
+        }
 
         CGContextRef context = UIGraphicsGetCurrentContext();
 
@@ -83,50 +131,65 @@
             CGContextRestoreGState(context);
         }
 
-        _drawBlock(rectToDraw);
+        heapDrawBlock(rectToDraw);
 
-        UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();
+        if (operation.isCancelled)
+        {
+            UIGraphicsEndImageContext();
+            return;
+        }
+
+        UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
 
         UIGraphicsEndImageContext();
 
-        [self.cache setObject:imageResult forKey:cacheKey];
+        if (operation.isCancelled)
+        {
+            UIGraphicsEndImageContext();
+            return;
+        }
 
-        if (waitUntilDone)
-        {
-            _completionBlock(imageResult);
-        }
-        else
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                _completionBlock(imageResult);
-            });
-        }
+        [self.cache setObject:resultImage forKey:cacheKey];
+        
+        operation.resultImage = resultImage;
+    }];
+
+    __strong __block _MSViewDrawingOperation *_operation = operation;
+
+    operation.completionBlock = ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            heapCompletionBlock(_operation.resultImage);
+            _operation = nil;
+        });
     };
+
+    [self.operationQueue addOperation:operation];
 
     if (waitUntilDone)
     {
-        loadImageBlock();
+        [operation waitUntilFinished];
+        return nil;
     }
     else
     {
-        dispatch_async(self.dispatchQueue, loadImageBlock);
+        return operation;
     }
 }
 
 #pragma mark - Public
 
-- (void)drawViewAsyncWithCacheKey:(NSString *)cacheKey
-                             size:(CGSize)imageSize
-                  backgroundColor:(UIColor *)backgroundColor
-                        drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
-                  completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock
+- (NSOperation *)drawViewAsyncWithCacheKey:(NSString *)cacheKey
+                                      size:(CGSize)imageSize
+                           backgroundColor:(UIColor *)backgroundColor
+                                 drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
+                           completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock
 {
-    [self drawViewWithCacheKey:cacheKey
-                          size:imageSize
-               backgroundColor:backgroundColor
-                     drawBlock:drawBlock
-               completionBlock:completionBlock
-                 waitUntilDone:NO];
+    return [self drawViewWithCacheKey:cacheKey
+                                 size:imageSize
+                      backgroundColor:backgroundColor
+                            drawBlock:drawBlock
+                      completionBlock:completionBlock
+                        waitUntilDone:NO];
 }
 
 - (UIImage *)drawViewSyncWithCacheKey:(NSString *)cacheKey
@@ -160,7 +223,7 @@
     {
         [color getWhite:NULL alpha:&alpha];
     }
-
+    
     return (alpha == 1.0f);
 }
 

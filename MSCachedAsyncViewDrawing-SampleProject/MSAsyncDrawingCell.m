@@ -21,6 +21,12 @@
 
 @end
 
+@interface MSCustomDrawnViewImageView ()
+
+@property (nonatomic, strong) NSOperation *imageLoadOperation;
+
+@end
+
 @implementation MSCustomDrawnViewImageView
 
 @synthesize circleColor = _circleColor;
@@ -85,30 +91,23 @@
         return;
     }
 
-    UIColor *currentCircleColor = self.circleColor;
-    CGSize currentSize = self.frame.size;
+    [self.imageLoadOperation cancel];
 
-    NSString *cacheKey = [NSString stringWithFormat:@"com.mindsnacks.circle.%@.%@", currentCircleColor, NSStringFromCGSize(self.frame.size)];
-    [[MSCachedAsyncViewDrawing sharedInstance] drawViewAsyncWithCacheKey:cacheKey
-                                                                    size:self.frame.size
-                                                         backgroundColor:self.backgroundColor
-                                                               drawBlock:^(CGRect frame)
-     {
-         MSCustomDrawnView *view = [[MSCustomDrawnView alloc] initWithFrame:frame
-                                                                circleColor:currentCircleColor];
+    NSString *cacheKey = [NSString stringWithFormat:@"com.mindsnacks.circle.%@.%@", self.circleColor, NSStringFromCGSize(self.frame.size)];
+    self.imageLoadOperation = [[MSCachedAsyncViewDrawing sharedInstance] drawViewAsyncWithCacheKey:cacheKey
+                                                                                              size:self.frame.size
+                                                                                   backgroundColor:self.backgroundColor
+                                                                                         drawBlock:^(CGRect frame)
+                               {
+                                   MSCustomDrawnView *view = [[MSCustomDrawnView alloc] initWithFrame:frame
+                                                                                          circleColor:self.circleColor];
 
-         [view drawRect:frame];
-     }
-                                                         completionBlock:^(UIImage *drawnImage)
-     {
-         // Prevent race conditions:
-         BOOL receivedImageHasCurrentConfiguration = ([currentCircleColor isEqual:self.circleColor] && CGSizeEqualToSize(currentSize, self.frame.size));
-
-         if (receivedImageHasCurrentConfiguration)
-         {
-             self.image = drawnImage;
-         }
-     }];
+                                   [view drawRect:frame];
+                               }
+                                                                                   completionBlock:^(UIImage *drawnImage)
+                               {
+                                   self.image = drawnImage;
+                               }];
 }
 
 @end

@@ -30,12 +30,14 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
  * To generate an opaque image, pass a color with alpha = 1.
  * @param drawBlock this method is called from a background thread, so you must pay special attention to the thread safety of
  * anything you do in it. It's safe to use UIKit methods like -[UIImage drawInRect:] or -[NSString drawInRect:].
+ * @return NSOperation associated with the drawing. If you're enqueuing a lot of drawing, you may want to cancel the operation
+ * before it finishes if the result is not needed anymore to save resources.
  */
-- (void)drawViewAsyncWithCacheKey:(NSString *)cacheKey
-                             size:(CGSize)imageSize
-                  backgroundColor:(UIColor *)backgroundColor
-                        drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
-                  completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock;
+- (NSOperation *)drawViewAsyncWithCacheKey:(NSString *)cacheKey
+                                      size:(CGSize)imageSize
+                           backgroundColor:(UIColor *)backgroundColor
+                                 drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
+                           completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock;
 
 /**
  * @discussion this is the synchronous version of the other method.
