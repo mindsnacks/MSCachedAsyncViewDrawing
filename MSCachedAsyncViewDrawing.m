@@ -61,44 +61,15 @@
 
     MSCachedAsyncViewDrawingDrawBlock _drawBlock = [drawBlock copy];
     MSCachedAsyncViewDrawingCompletionBlock _completionBlock = [completionBlock copy];
-
-    const CGFloat screenScale = [UIScreen mainScreen].scale;
-
-    CGSize realImageSize    = imageSize;
-    realImageSize.width     *= screenScale;
-    realImageSize.height    *= screenScale;
-
+    
     dispatch_block_t loadImageBlock = ^{
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-
         BOOL opaque = [self colorIsOpaque:backgroundColor];
 
-        const int bytesPerPixel = 4;
-        CGBitmapInfo bitmapInfo = opaque ? kCGImageAlphaNoneSkipLast : kCGImageAlphaPremultipliedLast;
-        const int bitsPerComponent = 8;
+        UIGraphicsBeginImageContextWithOptions(imageSize, opaque, 0);
 
-        CGContextRef context = CGBitmapContextCreate(NULL,
-                                                     (size_t)realImageSize.width,
-                                                     (size_t)realImageSize.height,
-                                                     bitsPerComponent,
-                                                     (size_t)realImageSize.width * bytesPerPixel,
-                                                     colorSpace,
-                                                     bitmapInfo);
+        CGContextRef context = UIGraphicsGetCurrentContext();
 
-        CGColorSpaceRelease(colorSpace);
-        colorSpace = NULL;
-
-        if (!context)
-        {
-            _completionBlock(nil);
-            return;
-        }
-
-        CGRect rectToDraw = (CGRect){.origin = CGPointZero, .size = realImageSize};
-
-        // Flip the context upside down since the CGContext has an inverse coordinate space.
-        CGContextTranslateCTM(context, 0, realImageSize.height);
-        CGContextScaleCTM(context, 1.0, -1.0);
+        CGRect rectToDraw = (CGRect){.origin = CGPointZero, .size = imageSize};
 
         BOOL shouldDrawBackgroundColor = ![backgroundColor isEqual:[UIColor clearColor]];
 
@@ -112,31 +83,22 @@
             CGContextRestoreGState(context);
         }
 
-        UIGraphicsPushContext(context);
-        {
-            _drawBlock(rectToDraw);
-        }
-        UIGraphicsPopContext();
+        _drawBlock(rectToDraw);
 
-        CGImageRef imageResult = CGBitmapContextCreateImage(context);
-        CGContextRelease(context);
-        context = NULL;
+        UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();
 
-        UIImage *image = [[UIImage alloc] initWithCGImage:imageResult
-                                                    scale:screenScale
-                                              orientation:UIImageOrientationUp];
-        CGImageRelease(imageResult);
+        UIGraphicsEndImageContext();
 
-        [self.cache setObject:image forKey:cacheKey];
+        [self.cache setObject:imageResult forKey:cacheKey];
 
         if (waitUntilDone)
         {
-            _completionBlock(image);
+            _completionBlock(imageResult);
         }
         else
         {
             dispatch_async(dispatch_get_main_queue(), ^{
-                _completionBlock(image);
+                _completionBlock(imageResult);
             });
         }
     };
@@ -190,9 +152,15 @@
 
 - (BOOL)colorIsOpaque:(UIColor *)color
 {
-    CGFloat alpha = 0.0f;
+    CGFloat alpha = -1.0f;
     [color getRed:NULL green:NULL blue:NULL alpha:&alpha];
-    
+
+    BOOL wrongColorSpace = (alpha == -1.0f);
+    if (wrongColorSpace)
+    {
+        [color getWhite:NULL alpha:&alpha];
+    }
+
     return (alpha == 1.0f);
 }
 

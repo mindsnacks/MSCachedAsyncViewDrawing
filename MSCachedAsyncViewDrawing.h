@@ -39,7 +39,8 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
                   completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock;
 
 /**
- * @discussion this method waits until the image is loaded and returns it instead of calling a completion block.
+ * @discussion this is the synchronous version of the other method.
+ * It waits until the image is loaded and returns it instead of calling a completion block.
  * @param `drawBlock` is called on the caller thread.
  */
 - (UIImage *)drawViewSyncWithCacheKey:(NSString *)cacheKey
