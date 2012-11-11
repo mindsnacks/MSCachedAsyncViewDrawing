@@ -2,7 +2,7 @@
 
 Helper class that allows you to draw views (a)synchronously to a UIImage with caching for awesome performance.
 
-# Description
+## Description
 
 (This assumes you know a bit about CoreGraphics and how some things like blending work. If not, go read [this post](http://engineering.twitter.com/2012/02/simple-strategies-for-smooth-animation.html) in the Twitter Engineering Blog).
 
@@ -12,11 +12,11 @@ For this reason, many times you'll find yourself preferring to use ```UIImageVie
 
 But sometimes you do have to use ```CGContextDrawImage```, because you have to do something more complex like masking, clipping, etc. Wouldn't it be great if you could still do that, but pass the result to a ```UIImageView``` easily? That's what ```MSCachedAsyncViewDrawing``` does.
 
-# Sample Project
+## Sample Project
 
 The sample project contains two view controllers that contain a table view in which every row has 3 views that implement `-drawInRect:`. One of them uses ```MSCachedAsyncViewDrawing``` and the other one doesn't. This is a very good example on how to use this class and its performance benefit. Install the sample app on your iOS device and compare.
 
-# How to use it
+## How to use it
 
 This is the main method in ```MSCachedAsyncViewDrawing```:
 
