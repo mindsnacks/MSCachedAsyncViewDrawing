@@ -20,7 +20,12 @@
 
 - (id)init
 {
-    return [super initWithCellClass:[MSAsyncDrawingCell class]];
+    if ((self = [super initWithCellClass:[MSAsyncDrawingCell class]]))
+    {
+        self.title = @"MSCachedAsyncViewDrawing";
+    }
+
+    return self;
 }
 
 @end
