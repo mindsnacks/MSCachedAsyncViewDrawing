@@ -91,10 +91,7 @@
         return;
     }
 
-    if (self.imageLoadOperation)
-    {
-        [self.imageLoadOperation cancel];
-    }
+    [self.imageLoadOperation cancel];
 
     NSString *cacheKey = [NSString stringWithFormat:@"com.mindsnacks.circle.%@.%@", self.circleColor, NSStringFromCGSize(self.frame.size)];
     self.imageLoadOperation = [[MSCachedAsyncViewDrawing sharedInstance] drawViewAsyncWithCacheKey:cacheKey
