@@ -31,7 +31,7 @@
 
     if (sizeHasChanged)
     {
-        [self loadImage];
+        [self setNeedsImageReload];
     }
 }
 
@@ -41,7 +41,7 @@
     {
         _circleColor = circleColor;
 
-        [self loadImage];
+        [self setNeedsImageReload];
     }
 }
 
@@ -53,8 +53,14 @@
 
     if (backgroundColorHasChanged)
     {
-        [self loadImage];
+        [self setNeedsImageReload];
     }
+}
+
+- (void)setNeedsImageReload
+{
+    self.image = nil;
+    [self loadImage];
 }
 
 - (void)loadImage
