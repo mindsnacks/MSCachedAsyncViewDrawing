@@ -44,6 +44,17 @@
 
 @implementation MSCachedAsyncViewDrawing
 
+static NSOperationQueue *_sharedOperationQueue = nil;
+
++ (void)initialize
+{
+    if ([self class] == [MSCachedAsyncViewDrawing class])
+    {
+        _sharedOperationQueue = [[NSOperationQueue alloc] init];
+        _sharedOperationQueue.name = @"com.mindsnacks.view_drawing.queue";
+    }
+}
+
 + (MSCachedAsyncViewDrawing *)sharedInstance
 {
     static MSCachedAsyncViewDrawing *sharedInstance = nil;
@@ -62,8 +73,7 @@
     {
         self.cache = [[NSCache alloc] init];
         self.cache.name = @"com.mindsnacks.view_drawing.cache";
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        self.operationQueue.name = @"com.mindsnacks.view_drawing.queue";
+        self.operationQueue = _sharedOperationQueue;
     }
 
     return self;
