@@ -1,13 +1,13 @@
 //
-//  MSFirstViewController.h
+//  MSAsyncDrawingTVC.h
 //  MSCachedAsyncViewDrawing-SampleProject
 //
 //  Created by Javier Soto on 11/10/12.
 //  Copyright (c) 2012 MindSnacks. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "MSCommonTVC.h"
 
-@interface MSFirstViewController : UIViewController
+@interface MSAsyncDrawingTVC : MSCommonTVC
 
 @end

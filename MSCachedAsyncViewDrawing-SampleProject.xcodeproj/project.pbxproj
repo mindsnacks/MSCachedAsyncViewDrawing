@@ -16,11 +16,15 @@
 		D01B4455164EFF9F00842F7F /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B4454164EFF9F00842F7F /* Default.png */; };
 		D01B4457164EFF9F00842F7F /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B4456164EFF9F00842F7F /* Default@2x.png */; };
 		D01B4459164EFF9F00842F7F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01B4458164EFF9F00842F7F /* Default-568h@2x.png */; };
-		D01B445C164EFF9F00842F7F /* MSFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B445B164EFF9F00842F7F /* MSFirstViewController.m */; };
-		D01B4463164EFF9F00842F7F /* MSSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B4462164EFF9F00842F7F /* MSSecondViewController.m */; };
-		D01B446A164EFF9F00842F7F /* MSFirstViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D01B4468164EFF9F00842F7F /* MSFirstViewController.xib */; };
-		D01B446D164EFF9F00842F7F /* MSSecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D01B446B164EFF9F00842F7F /* MSSecondViewController.xib */; };
 		D01B447B164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B447A164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m */; };
+		D01B447E164F11BC00842F7F /* MSCustomDrawnView.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B447D164F11BC00842F7F /* MSCustomDrawnView.m */; };
+		D01B4481164F143000842F7F /* MSTraditionalDrawingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B4480164F143000842F7F /* MSTraditionalDrawingTVC.m */; };
+		D01B4485164F146600842F7F /* MSAsyncDrawingTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B4484164F146600842F7F /* MSAsyncDrawingTVC.m */; };
+		D01B4489164F147F00842F7F /* MSCommonTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B4488164F147F00842F7F /* MSCommonTVC.m */; };
+		D01B448F164F16AD00842F7F /* MSTraditionalDrawingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B448E164F16AC00842F7F /* MSTraditionalDrawingCell.m */; };
+		D01B4492164F16C400842F7F /* MSAsyncDrawingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B4491164F16C400842F7F /* MSAsyncDrawingCell.m */; };
+		D0E49054164F218400485EC0 /* mindsnacks_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0E49053164F218400485EC0 /* mindsnacks_logo@2x.png */; };
+		D0E490A0164F25C000485EC0 /* mindsnacks_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D0E4909F164F25C000485EC0 /* mindsnacks_logo.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,14 +41,23 @@
 		D01B4454164EFF9F00842F7F /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		D01B4456164EFF9F00842F7F /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		D01B4458164EFF9F00842F7F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		D01B445A164EFF9F00842F7F /* MSFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSFirstViewController.h; sourceTree = "<group>"; };
-		D01B445B164EFF9F00842F7F /* MSFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSFirstViewController.m; sourceTree = "<group>"; };
-		D01B4461164EFF9F00842F7F /* MSSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSSecondViewController.h; sourceTree = "<group>"; };
-		D01B4462164EFF9F00842F7F /* MSSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSSecondViewController.m; sourceTree = "<group>"; };
-		D01B4469164EFF9F00842F7F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MSFirstViewController.xib; sourceTree = "<group>"; };
-		D01B446C164EFF9F00842F7F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MSSecondViewController.xib; sourceTree = "<group>"; };
 		D01B4479164EFFDC00842F7F /* MSCachedAsyncViewDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCachedAsyncViewDrawing.h; sourceTree = SOURCE_ROOT; };
 		D01B447A164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSCachedAsyncViewDrawing.m; sourceTree = SOURCE_ROOT; };
+		D01B447C164F11BC00842F7F /* MSCustomDrawnView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCustomDrawnView.h; sourceTree = "<group>"; };
+		D01B447D164F11BC00842F7F /* MSCustomDrawnView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSCustomDrawnView.m; sourceTree = "<group>"; };
+		D01B447F164F143000842F7F /* MSTraditionalDrawingTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTraditionalDrawingTVC.h; sourceTree = "<group>"; };
+		D01B4480164F143000842F7F /* MSTraditionalDrawingTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTraditionalDrawingTVC.m; sourceTree = "<group>"; };
+		D01B4483164F146600842F7F /* MSAsyncDrawingTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSAsyncDrawingTVC.h; sourceTree = "<group>"; };
+		D01B4484164F146600842F7F /* MSAsyncDrawingTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSAsyncDrawingTVC.m; sourceTree = "<group>"; };
+		D01B4487164F147F00842F7F /* MSCommonTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCommonTVC.h; sourceTree = "<group>"; };
+		D01B4488164F147F00842F7F /* MSCommonTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSCommonTVC.m; sourceTree = "<group>"; };
+		D01B448A164F165C00842F7F /* MSCustomDrawnViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCustomDrawnViewCell.h; sourceTree = "<group>"; };
+		D01B448D164F16AC00842F7F /* MSTraditionalDrawingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTraditionalDrawingCell.h; sourceTree = "<group>"; };
+		D01B448E164F16AC00842F7F /* MSTraditionalDrawingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTraditionalDrawingCell.m; sourceTree = "<group>"; };
+		D01B4490164F16C400842F7F /* MSAsyncDrawingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSAsyncDrawingCell.h; sourceTree = "<group>"; };
+		D01B4491164F16C400842F7F /* MSAsyncDrawingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSAsyncDrawingCell.m; sourceTree = "<group>"; };
+		D0E49053164F218400485EC0 /* mindsnacks_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mindsnacks_logo@2x.png"; sourceTree = "<group>"; };
+		D0E4909F164F25C000485EC0 /* mindsnacks_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mindsnacks_logo.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,12 +107,8 @@
 			children = (
 				D01B4451164EFF9F00842F7F /* MSAppDelegate.h */,
 				D01B4452164EFF9F00842F7F /* MSAppDelegate.m */,
-				D01B445A164EFF9F00842F7F /* MSFirstViewController.h */,
-				D01B445B164EFF9F00842F7F /* MSFirstViewController.m */,
-				D01B4461164EFF9F00842F7F /* MSSecondViewController.h */,
-				D01B4462164EFF9F00842F7F /* MSSecondViewController.m */,
-				D01B4468164EFF9F00842F7F /* MSFirstViewController.xib */,
-				D01B446B164EFF9F00842F7F /* MSSecondViewController.xib */,
+				D01B4482164F144E00842F7F /* ViewControllers */,
+				D01B4486164F146C00842F7F /* Views */,
 				D01B4449164EFF9F00842F7F /* Supporting Files */,
 			);
 			path = "MSCachedAsyncViewDrawing-SampleProject";
@@ -108,6 +117,8 @@
 		D01B4449164EFF9F00842F7F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D0E4909F164F25C000485EC0 /* mindsnacks_logo.png */,
+				D0E49053164F218400485EC0 /* mindsnacks_logo@2x.png */,
 				D01B444A164EFF9F00842F7F /* MSCachedAsyncViewDrawing-SampleProject-Info.plist */,
 				D01B444B164EFF9F00842F7F /* InfoPlist.strings */,
 				D01B444E164EFF9F00842F7F /* main.m */,
@@ -127,6 +138,33 @@
 			);
 			name = MSCachedAsyncViewDrawing;
 			path = "MSCachedAsyncViewDrawing-SampleProject";
+			sourceTree = "<group>";
+		};
+		D01B4482164F144E00842F7F /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				D01B4487164F147F00842F7F /* MSCommonTVC.h */,
+				D01B4488164F147F00842F7F /* MSCommonTVC.m */,
+				D01B447F164F143000842F7F /* MSTraditionalDrawingTVC.h */,
+				D01B4480164F143000842F7F /* MSTraditionalDrawingTVC.m */,
+				D01B4483164F146600842F7F /* MSAsyncDrawingTVC.h */,
+				D01B4484164F146600842F7F /* MSAsyncDrawingTVC.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		D01B4486164F146C00842F7F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D01B447C164F11BC00842F7F /* MSCustomDrawnView.h */,
+				D01B447D164F11BC00842F7F /* MSCustomDrawnView.m */,
+				D01B448A164F165C00842F7F /* MSCustomDrawnViewCell.h */,
+				D01B448D164F16AC00842F7F /* MSTraditionalDrawingCell.h */,
+				D01B448E164F16AC00842F7F /* MSTraditionalDrawingCell.m */,
+				D01B4490164F16C400842F7F /* MSAsyncDrawingCell.h */,
+				D01B4491164F16C400842F7F /* MSAsyncDrawingCell.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,8 +223,8 @@
 				D01B4455164EFF9F00842F7F /* Default.png in Resources */,
 				D01B4457164EFF9F00842F7F /* Default@2x.png in Resources */,
 				D01B4459164EFF9F00842F7F /* Default-568h@2x.png in Resources */,
-				D01B446A164EFF9F00842F7F /* MSFirstViewController.xib in Resources */,
-				D01B446D164EFF9F00842F7F /* MSSecondViewController.xib in Resources */,
+				D0E49054164F218400485EC0 /* mindsnacks_logo@2x.png in Resources */,
+				D0E490A0164F25C000485EC0 /* mindsnacks_logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,9 +237,13 @@
 			files = (
 				D01B444F164EFF9F00842F7F /* main.m in Sources */,
 				D01B4453164EFF9F00842F7F /* MSAppDelegate.m in Sources */,
-				D01B445C164EFF9F00842F7F /* MSFirstViewController.m in Sources */,
-				D01B4463164EFF9F00842F7F /* MSSecondViewController.m in Sources */,
 				D01B447B164EFFDC00842F7F /* MSCachedAsyncViewDrawing.m in Sources */,
+				D01B447E164F11BC00842F7F /* MSCustomDrawnView.m in Sources */,
+				D01B4481164F143000842F7F /* MSTraditionalDrawingTVC.m in Sources */,
+				D01B4485164F146600842F7F /* MSAsyncDrawingTVC.m in Sources */,
+				D01B4489164F147F00842F7F /* MSCommonTVC.m in Sources */,
+				D01B448F164F16AD00842F7F /* MSTraditionalDrawingCell.m in Sources */,
+				D01B4492164F16C400842F7F /* MSAsyncDrawingCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,22 +256,6 @@
 				D01B444C164EFF9F00842F7F /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		D01B4468164EFF9F00842F7F /* MSFirstViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D01B4469164EFF9F00842F7F /* en */,
-			);
-			name = MSFirstViewController.xib;
-			sourceTree = "<group>";
-		};
-		D01B446B164EFF9F00842F7F /* MSSecondViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D01B446C164EFF9F00842F7F /* en */,
-			);
-			name = MSSecondViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
