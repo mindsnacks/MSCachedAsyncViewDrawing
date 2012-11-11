@@ -125,9 +125,6 @@
     }
     
     CGPathRelease(circlePath);
-
-    CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
-    [@"test" drawInRect:rect withFont:[UIFont systemFontOfSize:15.0f]];
 }
 
 @end
