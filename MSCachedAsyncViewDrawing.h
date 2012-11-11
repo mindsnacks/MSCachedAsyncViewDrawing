@@ -19,11 +19,10 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
 + (MSCachedAsyncViewDrawing *)sharedInstance;
 
 /**
- * @discussion this method will call `drawBlock` _on a background thread_ after pushing a `CGBitmapContext` to UIKit,
- * passing a CGRect that you can pass to a `drawRect:` method of a view or a layer. The method takes care of 
- * automatically popping the context off of the UIKit stack. 
+ * @discussion this method will call `drawBlock` _on a background thread_ passing a CGRect that you can pass to a `drawRect:` method
+ * of a view or a layer.
  * Once finished, it'll call the completion block on the main thread with the drawn UIImage object.
- * `MSCachedAsyncViewDrawing` objects keep an internal cache so multiple calls to this method with the same `cacheKey` 
+ * `MSCachedAsyncViewDrawing` objects keep an internal cache so multiple calls to this method with the same `cacheKey`
  * will result in the inmediate call of `completionBlock`.
  * @param `cacheKey` make sure you create a string with the paremeters of the view. Two views configured
  * differently (say, different text or font color) should have different cache keys to avoid collisions)
