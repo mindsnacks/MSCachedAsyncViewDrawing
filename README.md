@@ -1,6 +1,6 @@
 # MSCachedAsyncViewDrawing
 
-Helper class that allows you to draw views (a)synchronously to a UIImage with caching for awesome performance.
+Helper class that allows you to draw views (a)synchronously to a UIImage with caching for great performance.
 
 ## Description
 
