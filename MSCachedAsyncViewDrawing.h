@@ -23,7 +23,7 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
  * of a view or a layer.
  * Once finished, it'll call the completion block on the main thread with the drawn UIImage object.
  * `MSCachedAsyncViewDrawing` objects keep an internal cache so multiple calls to this method with the same `cacheKey`
- * will result in the inmediate call of `completionBlock`.
+ * will result in the immediate call of `completionBlock`.
  * @param `cacheKey` make sure you create a string with the paremeters of the view. Two views configured
  * differently (say, different text or font color) should have different cache keys to avoid collisions)
  * @param backgroundColor if you want a transparent image, just pass [UIColor clearColor].
