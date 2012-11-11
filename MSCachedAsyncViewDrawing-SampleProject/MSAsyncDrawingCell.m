@@ -17,11 +17,13 @@
  */
 @interface MSCustomDrawnViewImageView : UIImageView
 
-@property (nonatomic, strong) UIColor *circleColor;
+@property (atomic, strong) UIColor *circleColor;
 
 @end
 
 @implementation MSCustomDrawnViewImageView
+
+@synthesize circleColor = _circleColor;
 
 - (void)setFrame:(CGRect)frame
 {
@@ -37,11 +39,22 @@
 
 - (void)setCircleColor:(UIColor *)circleColor
 {
-    if (circleColor != _circleColor)
+    @synchronized(self)
     {
-        _circleColor = circleColor;
+        if (circleColor != _circleColor)
+        {
+            _circleColor = circleColor;
 
-        [self setNeedsImageReload];
+            [self setNeedsImageReload];
+        }
+    }
+}
+
+- (UIColor *)circleColor
+{
+    @synchronized(self)
+    {
+        return _circleColor;
     }
 }
 
