@@ -28,13 +28,12 @@
 
 + (_MSViewDrawingOperation *)viewDrawingBlockOperationWithBlock:(void (^)(_MSViewDrawingOperation *))block
 {
-    UIImage * (^heapBlock)(_MSViewDrawingOperation *) = [block copy];
     _MSViewDrawingOperation *operation = [[self alloc] init];
 
     __weak _MSViewDrawingOperation *weakOperation = operation;
 
     [operation addExecutionBlock:^{
-        heapBlock(weakOperation);
+        block(weakOperation);
     }];
 
     return operation;
@@ -99,7 +98,7 @@ static NSOperationQueue *_sharedOperationQueue = nil;
     MSCachedAsyncViewDrawingDrawBlock heapDrawBlock = [drawBlock copy];
     MSCachedAsyncViewDrawingCompletionBlock heapCompletionBlock = [completionBlock copy];
 
-    _MSViewDrawingOperation *operation = [_MSViewDrawingOperation viewDrawingBlockOperationWithBlock:^(_MSViewDrawingOperation *operation) {
+    _MSViewDrawingOperation *operation = [_MSViewDrawingOperation viewDrawingBlockOperationWithBlock:[^(_MSViewDrawingOperation *operation) {
         if (operation.isCancelled)
         {
             return;
@@ -152,7 +151,7 @@ static NSOperationQueue *_sharedOperationQueue = nil;
         [self.cache setObject:resultImage forKey:cacheKey];
         
         operation.resultImage = resultImage;
-    }];
+    }  copy]];
 
     __strong __block _MSViewDrawingOperation *_operation = operation;
 
