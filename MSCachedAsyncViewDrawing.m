@@ -8,11 +8,23 @@
 
 #import "MSCachedAsyncViewDrawing.h"
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
+    #define MSTreatQueuesAsObjects (0)
+#else
+    #define MSTreatQueuesAsObjects (1)
+#endif
+
+#if MSTreatQueuesAsObjects
+    #define MS_dispatch_queue_t_property_qualifier strong
+#else
+    #define MS_dispatch_queue_t_property_qualifier assign
+#endif
+
 @interface MSCachedAsyncViewDrawing ()
 
 @property (nonatomic, strong) NSCache *cache;
 
-@property (nonatomic, strong) dispatch_queue_t dispatchQueue;
+@property (nonatomic, MS_dispatch_queue_t_property_qualifier) dispatch_queue_t dispatchQueue;
 
 @end
 
@@ -40,6 +52,13 @@
     }
 
     return self;
+}
+
+- (void)dealloc
+{
+    #if !MSTreatQueuesAsObjects
+        dispatch_release(_dispatchQueue);
+    #endif
 }
 
 #pragma mark - Private
