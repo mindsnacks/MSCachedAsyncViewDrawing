@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>MSCachedAsyncViewDrawing by mindsnacks</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/mindsnacks/MSCachedAsyncViewDrawing">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/mindsnacks/MSCachedAsyncViewDrawing/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/mindsnacks/MSCachedAsyncViewDrawing/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>MSCachedAsyncViewDrawing</h1>
+          <p>Helper class that allows you to draw views (a)synchronously to a UIImage with caching for great performance.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/mindsnacks">mindsnacks</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>MSCachedAsyncViewDrawing</h1>
+
+<p>Helper class that allows you to draw views (a)synchronously to a UIImage with caching for great performance.</p>
+
+<h2>Description</h2>
+
+<p>(This assumes you know a bit about CoreGraphics and how some things like blending work. If not, go read <a href="http://engineering.twitter.com/2012/02/simple-strategies-for-smooth-animation.html">this post</a> in the Twitter Engineering Blog).</p>
+
+<p>So you have a UITableView in your application that scrolls slow. You decide to implement the cell drawing entirely in CoreGraphics implementing <code>-[UIView drawRect:]</code> in your cell. This is perfect, until you have to draw images. <code>CGContextDrawImage</code> is <strong>really slow</strong> compared to using <code>UIImageView</code>.</p>
+
+<p>For this reason, many times you'll find yourself preferring to use <code>UIImageView</code> even if some compositing has to happen on the cell, because rendering images with it is <strong>FAST</strong> due to the crazy optimizations that it implements internally.</p>
+
+<p>But sometimes you do have to use <code>CGContextDrawImage</code>, because you have to do something more complex like masking, clipping, etc. Wouldn't it be great if you could still do that, but pass the result to a <code>UIImageView</code> easily, so that you get the benefit from both worlds? That's what <code>MSCachedAsyncViewDrawing</code> does.</p>
+
+<h2>When to use MSCachedAsyncViewDrawing</h2>
+
+<p>Needless to say you shouldn't just go ahead and apply this to all of the UIViews in your app. There's a drawback in this approach, as you're incurring in higher memory usage by storing the result of the all the drawing operations.
+<strong>The only way to know if using <code>MSCachedAsyncViewDrawing</code> improves or not the performance in your particular case, is to try it out and compare.</strong>
+As a general rule on when <em>it makes sense</em> to use it would be when -<code>drawRect:</code> is becoming a bottleneck, specially if it's using <code>CGContextDrawImage</code> inside. This can happen when you have many complex views in the cells of a <code>UITableView</code>.</p>
+
+<h2>Sample Project</h2>
+
+<p>The sample project contains two view controllers that contain a table view in which every row has 3 views that implement <code>-drawInRect:</code>. One of them uses <code>MSCachedAsyncViewDrawing</code> and the other one doesn't. This is an example on how to use this class and its performance benefit. Install the sample app on your iOS device and compare.
+It's also a typical use case for this class, since there are many views on screen at the same time, and they all have to render a <code>UIImage</code>, this becomes a bottleneck. <code>MSCachedAsyncViewDrawing</code> makes this asynchronous, hence not blocking the main thread and getting perfect scrolling performance, and it also prevents the views from rendering more than once.</p>
+
+<h2>How to use it</h2>
+
+<p>This is the main method in <code>MSCachedAsyncViewDrawing</code>:</p>
+
+<div class="highlight"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">drawViewAsyncWithCacheKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">cacheKey</span>
+                             <span class="nf">size:</span><span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">imageSize</span>
+                  <span class="nf">backgroundColor:</span><span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nv">backgroundColor</span>
+                        <span class="nf">drawBlock:</span><span class="p">(</span><span class="n">MSCachedAsyncViewDrawingDrawBlock</span><span class="p">)</span><span class="nv">drawBlock</span>
+                  <span class="nf">completionBlock:</span><span class="p">(</span><span class="n">MSCachedAsyncViewDrawingCompletionBlock</span><span class="p">)</span><span class="nv">completionBlock</span><span class="p">;</span>
+</pre></div>
+
+<p>The block types are declared like this:</p>
+
+<div class="highlight"><pre><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">MSCachedAsyncViewDrawingDrawBlock</span><span class="p">)(</span><span class="n">CGRect</span> <span class="n">frame</span><span class="p">);</span>
+<span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">MSCachedAsyncViewDrawingCompletionBlock</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">drawnImage</span><span class="p">);</span>
+</pre></div>
+
+<p><code>MSCachedAsyncViewDrawing</code> is going to take the <code>drawBlock</code> and call it on a background thread, passing it the <code>CGRect</code> that you can pass to a <code>-drawRect:</code> method of a view. When it's done, it's going to cache the <code>UIImage</code> object with the specified <code>cacheKey</code> and call your <code>completionBlock</code> with it.</p>
+
+<p>A subsequent call with the same <code>cacheKey</code> will result in the immediate call of the <code>completionBlock</code> without calling the drawBlock because it'll grab the rendered image from the cache.</p>
+
+<p>The cache is implemented using <code>NSCache</code>, so you don't have to worry about putting caching too many images, because iOS is going to take care of evicting obejcts as the available memory goes low.</p>
+
+<p>If you prefer to block the UI while the rendering is happening, beacuse you want to make sure that the image view is not empty at any point, you can use this other method, which inmediately returns the <code>UIImage</code> object:</p>
+
+<div class="highlight"><pre><span class="k">-</span> <span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">drawViewSyncWithCacheKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">cacheKey</span>
+                                 <span class="nf">size:</span><span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">imageSize</span>
+                      <span class="nf">backgroundColor:</span><span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nv">backgroundColor</span>
+                            <span class="nf">drawBlock:</span><span class="p">(</span><span class="n">MSCachedAsyncViewDrawingDrawBlock</span><span class="p">)</span><span class="nv">drawBlock</span><span class="p">;</span>
+</pre></div>
+
+<h2>Compatibility</h2>
+
+<ul>
+<li>
+<code>MSCachedAsyncViewDrawing</code> is compatible with iOS5.0+.</li>
+<li>
+<code>MSCachedAsyncViewDrawing</code> uses ARC. To use in a non-ARC project, mark <code>MSCachedAsyncViewDrawing.m</code> with the linker flag <code>-fobjc-arc.</code>
+</li>
+</ul><h2>License</h2>
+
+<p>Copyright 2012 MindSnacks</p>
+
+<p>Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+
+<p><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
