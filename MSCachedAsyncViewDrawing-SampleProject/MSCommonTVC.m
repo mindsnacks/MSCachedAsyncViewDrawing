@@ -37,8 +37,6 @@
 {
     [super viewDidLoad];
 
-    [self.tableView registerClass:self.cellClass forCellReuseIdentifier:[self cellID]];
-
     self.tableView.backgroundColor = kBackgroundColor;
     self.tableView.rowHeight = kRowHeight;
 }
@@ -53,6 +51,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell<MSCustomDrawnViewCell> *cell = [tableView dequeueReusableCellWithIdentifier:[self cellID]];
+    if (cell == nil)
+    {
+        cell = [[self.cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[self cellID]];
+    }
+
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
     cell.circleColors = [self circleColorsForIndexPath:indexPath];
