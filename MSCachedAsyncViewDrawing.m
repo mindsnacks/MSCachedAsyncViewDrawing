@@ -78,8 +78,8 @@
         return;
     }
 
-    MSCachedAsyncViewDrawingDrawBlock _drawBlock = [drawBlock copy];
-    MSCachedAsyncViewDrawingCompletionBlock _completionBlock = [completionBlock copy];
+    drawBlock = [drawBlock copy];
+    completionBlock = [completionBlock copy];
     
     dispatch_block_t loadImageBlock = ^{
         BOOL opaque = [self colorIsOpaque:backgroundColor];
@@ -104,7 +104,7 @@
                 CGContextRestoreGState(context);
             }
             
-            _drawBlock(rectToDraw);
+            drawBlock(rectToDraw);
             
             resultImage = UIGraphicsGetImageFromCurrentImageContext();
         }
@@ -114,12 +114,12 @@
 
         if (waitUntilDone)
         {
-            _completionBlock(resultImage);
+            completionBlock(resultImage);
         }
         else
         {
             dispatch_async(dispatch_get_main_queue(), ^{
-                _completionBlock(resultImage);
+                completionBlock(resultImage);
             });
         }
     };
