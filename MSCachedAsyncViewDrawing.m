@@ -84,40 +84,42 @@
     dispatch_block_t loadImageBlock = ^{
         BOOL opaque = [self colorIsOpaque:backgroundColor];
 
+        UIImage *resultImage = nil;
+
         UIGraphicsBeginImageContextWithOptions(imageSize, opaque, 0);
-
-        CGContextRef context = UIGraphicsGetCurrentContext();
-
-        CGRect rectToDraw = (CGRect){.origin = CGPointZero, .size = imageSize};
-
-        BOOL shouldDrawBackgroundColor = ![backgroundColor isEqual:[UIColor clearColor]];
-
-        if (shouldDrawBackgroundColor)
         {
-            CGContextSaveGState(context);
+            CGContextRef context = UIGraphicsGetCurrentContext();
+
+            CGRect rectToDraw = (CGRect){.origin = CGPointZero, .size = imageSize};
+
+            BOOL shouldDrawBackgroundColor = ![backgroundColor isEqual:[UIColor clearColor]];
+
+            if (shouldDrawBackgroundColor)
             {
-                CGContextSetFillColorWithColor(context, backgroundColor.CGColor);
-                CGContextFillRect(context, rectToDraw);
+                CGContextSaveGState(context);
+                {
+                    CGContextSetFillColorWithColor(context, backgroundColor.CGColor);
+                    CGContextFillRect(context, rectToDraw);
+                }
+                CGContextRestoreGState(context);
             }
-            CGContextRestoreGState(context);
+            
+            _drawBlock(rectToDraw);
+            
+            resultImage = UIGraphicsGetImageFromCurrentImageContext();
         }
-
-        _drawBlock(rectToDraw);
-
-        UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();
-
         UIGraphicsEndImageContext();
 
-        [self.cache setObject:imageResult forKey:cacheKey];
+        [self.cache setObject:resultImage forKey:cacheKey];
 
         if (waitUntilDone)
         {
-            _completionBlock(imageResult);
+            _completionBlock(resultImage);
         }
         else
         {
             dispatch_async(dispatch_get_main_queue(), ^{
-                _completionBlock(imageResult);
+                _completionBlock(resultImage);
             });
         }
     };
