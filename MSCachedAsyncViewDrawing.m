@@ -110,7 +110,7 @@
         }
         UIGraphicsEndImageContext();
 
-        [self.cache setObject:resultImage forKey:cacheKey];
+        if (resultImage) [self.cache setObject:resultImage forKey:cacheKey];
 
         if (waitUntilDone)
         {
