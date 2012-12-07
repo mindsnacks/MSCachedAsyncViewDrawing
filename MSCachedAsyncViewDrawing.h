@@ -24,6 +24,7 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
  * Once finished, it'll call the completion block on the main thread with the drawn UIImage object.
  * `MSCachedAsyncViewDrawing` objects keep an internal cache so multiple calls to this method with the same `cacheKey`
  * will result in the immediate call of `completionBlock`.
+ * @param `synchronous` Passing YES will run synchronously and will call completionBlock before returning nil
  * @param `cacheKey` make sure you create a string with the paremeters of the view. Two views configured
  * differently (say, different text or font color) should have different cache keys to avoid collisions)
  * @param backgroundColor if you want a transparent image, just pass [UIColor clearColor].
@@ -33,21 +34,11 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
  * @return NSOperation associated with the drawing. If you're enqueuing a lot of drawing, you may want to cancel the operation
  * before it finishes if the result is not needed anymore to save resources.
  */
-- (NSOperation *)drawViewAsyncWithCacheKey:(NSString *)cacheKey
-                                      size:(CGSize)imageSize
-                           backgroundColor:(UIColor *)backgroundColor
-                                 drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
-                           completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock;
-
-/**
- * @discussion this is the synchronous version of the other method.
- * It waits until the image is loaded and returns it instead of calling a completion block.
- * @param `drawBlock` is called on the caller thread.
- */
-- (UIImage *)drawViewSyncWithCacheKey:(NSString *)cacheKey
-                                 size:(CGSize)imageSize
-                      backgroundColor:(UIColor *)backgroundColor
-                            drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock;
-
+- (NSOperation *)drawViewSynchronous:(BOOL)synchronous
+                        withCacheKey:(NSString *)cacheKey
+                                size:(CGSize)imageSize
+                     backgroundColor:(UIColor *)backgroundColor
+                           drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
+                     completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock;
 
 @end

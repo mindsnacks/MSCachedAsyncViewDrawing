@@ -24,16 +24,18 @@
 
 @end
 
+typedef void (^MSCachedAsyncViewDrawingOperationBlock)(_MSViewDrawingOperation *operation);
+
 @implementation _MSViewDrawingOperation
 
-+ (_MSViewDrawingOperation *)viewDrawingBlockOperationWithBlock:(void (^)(_MSViewDrawingOperation *))block
++ (_MSViewDrawingOperation *)viewDrawingBlockOperationWithBlock:(MSCachedAsyncViewDrawingOperationBlock)operationBlock
 {
     _MSViewDrawingOperation *operation = [[self alloc] init];
 
     __weak _MSViewDrawingOperation *weakOperation = operation;
 
     [operation addExecutionBlock:^{
-        block(weakOperation);
+        operationBlock(weakOperation);
     }];
 
     return operation;
@@ -80,12 +82,12 @@ static NSOperationQueue *_sharedOperationQueue = nil;
 
 #pragma mark - Private
 
-- (NSOperation *)drawViewWithCacheKey:(NSString *)cacheKey
-                                 size:(CGSize)imageSize
-                      backgroundColor:(UIColor *)backgroundColor
-                            drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
-                      completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock
-                        waitUntilDone:(BOOL)waitUntilDone
+- (NSOperation *)drawViewSynchronous:(BOOL)synchronous
+                        withCacheKey:(NSString *)cacheKey
+                                size:(CGSize)imageSize
+                     backgroundColor:(UIColor *)backgroundColor
+                           drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
+                     completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock;
 {
     UIImage *cachedImage = [self.cache objectForKey:cacheKey];
 
@@ -98,28 +100,28 @@ static NSOperationQueue *_sharedOperationQueue = nil;
     MSCachedAsyncViewDrawingDrawBlock heapDrawBlock = [drawBlock copy];
     MSCachedAsyncViewDrawingCompletionBlock heapCompletionBlock = [completionBlock copy];
 
-    _MSViewDrawingOperation *operation = [_MSViewDrawingOperation viewDrawingBlockOperationWithBlock:[^(_MSViewDrawingOperation *operation) {
+    MSCachedAsyncViewDrawingOperationBlock operationBlock = ^(_MSViewDrawingOperation *operation) {
         if (operation.isCancelled)
         {
             return;
         }
-
+        
         BOOL opaque = [self colorIsOpaque:backgroundColor];
-
+        
         UIGraphicsBeginImageContextWithOptions(imageSize, opaque, 0);
-
+        
         if (operation.isCancelled)
         {
             UIGraphicsEndImageContext();
             return;
         }
-
+        
         CGContextRef context = UIGraphicsGetCurrentContext();
-
+        
         CGRect rectToDraw = (CGRect){.origin = CGPointZero, .size = imageSize};
-
+        
         BOOL shouldDrawBackgroundColor = ![backgroundColor isEqual:[UIColor clearColor]];
-
+        
         if (shouldDrawBackgroundColor)
         {
             CGContextSaveGState(context);
@@ -129,29 +131,31 @@ static NSOperationQueue *_sharedOperationQueue = nil;
             }
             CGContextRestoreGState(context);
         }
-
+        
         heapDrawBlock(rectToDraw);
-
+        
         if (operation.isCancelled)
         {
             UIGraphicsEndImageContext();
             return;
         }
-
+        
         UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
-
+        
         UIGraphicsEndImageContext();
-
+        
         if (operation.isCancelled)
         {
             UIGraphicsEndImageContext();
             return;
         }
-
+        
         [self.cache setObject:resultImage forKey:cacheKey];
         
         operation.resultImage = resultImage;
-    }  copy]];
+    };
+    
+    _MSViewDrawingOperation *operation = [_MSViewDrawingOperation viewDrawingBlockOperationWithBlock:[operationBlock copy]];
 
     __strong __block _MSViewDrawingOperation *_operation = operation;
 
@@ -162,52 +166,17 @@ static NSOperationQueue *_sharedOperationQueue = nil;
         });
     };
 
-    [self.operationQueue addOperation:operation];
-
-    if (waitUntilDone)
+    if (synchronous)
     {
-        [operation waitUntilFinished];
+        operationBlock(operation);
+        completionBlock(operation.resultImage);
         return nil;
     }
     else
     {
+        [self.operationQueue addOperation:operation];
         return operation;
     }
-}
-
-#pragma mark - Public
-
-- (NSOperation *)drawViewAsyncWithCacheKey:(NSString *)cacheKey
-                                      size:(CGSize)imageSize
-                           backgroundColor:(UIColor *)backgroundColor
-                                 drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
-                           completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock
-{
-    return [self drawViewWithCacheKey:cacheKey
-                                 size:imageSize
-                      backgroundColor:backgroundColor
-                            drawBlock:drawBlock
-                      completionBlock:completionBlock
-                        waitUntilDone:NO];
-}
-
-- (UIImage *)drawViewSyncWithCacheKey:(NSString *)cacheKey
-                                 size:(CGSize)imageSize
-                      backgroundColor:(UIColor *)backgroundColor
-                            drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock
-{
-    __block UIImage *image = nil;
-
-    [self drawViewWithCacheKey:cacheKey
-                          size:imageSize
-               backgroundColor:backgroundColor
-                     drawBlock:drawBlock
-               completionBlock:^(UIImage *drawnImage) {
-                   image = drawnImage;
-               }
-                 waitUntilDone:YES];
-
-    return image;
 }
 
 #pragma mark - Aux
