@@ -23,7 +23,6 @@
 @interface MSCachedAsyncViewDrawing ()
 
 @property (nonatomic, strong) NSCache *cache;
-@property (nonatomic, strong) NSMutableDictionary *inProgessKeyToCompletionBlocksDictionary;
 
 @property (nonatomic, MS_dispatch_queue_t_property_qualifier) dispatch_queue_t dispatchQueue;
 
@@ -49,9 +48,6 @@
     {
         self.cache = [[NSCache alloc] init];
         self.cache.name = @"com.mindsnacks.view_drawing.cache";
-        
-        self.inProgessKeyToCompletionBlocksDictionary = [[NSMutableDictionary alloc] init];
-        
         self.dispatchQueue = dispatch_queue_create("com.mindsnacks.view_drawing.queue", DISPATCH_QUEUE_CONCURRENT);
     }
 
@@ -85,19 +81,6 @@
     drawBlock = [drawBlock copy];
     completionBlock = [completionBlock copy];
     
-    NSArray *completionBlocksForCacheKey = [self.inProgessKeyToCompletionBlocksDictionary objectForKey:cacheKey];
-    if (completionBlocksForCacheKey)
-    {
-        completionBlocksForCacheKey = [completionBlocksForCacheKey arrayByAddingObject:completionBlock];
-        [self.inProgessKeyToCompletionBlocksDictionary setObject:completionBlocksForCacheKey forKey:cacheKey];
-        return;
-    }
-    else
-    {
-        completionBlocksForCacheKey = @[completionBlock];
-        [self.inProgessKeyToCompletionBlocksDictionary setObject:completionBlocksForCacheKey forKey:cacheKey];
-    }
-    
     dispatch_block_t loadImageBlock = ^{
         BOOL opaque = [self colorIsOpaque:backgroundColor];
 
@@ -126,17 +109,17 @@
             resultImage = UIGraphicsGetImageFromCurrentImageContext();
         }
         UIGraphicsEndImageContext();
-        
+
         if (resultImage) [self.cache setObject:resultImage forKey:cacheKey];
-        
+
         if (waitUntilDone)
         {
-            [self callCompletionBlocksForCacheKey:cacheKey image:resultImage];
+            completionBlock(resultImage);
         }
         else
         {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self callCompletionBlocksForCacheKey:cacheKey image:resultImage];
+                completionBlock(resultImage);
             });
         }
     };
@@ -149,15 +132,6 @@
     {
         dispatch_async(self.dispatchQueue, loadImageBlock);
     }
-}
-
-- (void)callCompletionBlocksForCacheKey:(NSString *)cacheKey image:(UIImage *)image
-{
-    for (MSCachedAsyncViewDrawingCompletionBlock completionBlock in [self.inProgessKeyToCompletionBlocksDictionary objectForKey:cacheKey])
-    {
-        completionBlock(image);
-    }
-    [self.inProgessKeyToCompletionBlocksDictionary removeObjectForKey:cacheKey];
 }
 
 #pragma mark - Public
