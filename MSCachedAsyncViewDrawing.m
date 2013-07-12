@@ -8,6 +8,10 @@
 
 #import "MSCachedAsyncViewDrawing.h"
 
+#if !__has_feature(objc_arc)
+    #error MSCachedAsyncViewDrawing is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
+#endif
+
 #define MSTreatQueuesAsObjects OS_OBJECT_USE_OBJC
 
 #if MSTreatQueuesAsObjects
