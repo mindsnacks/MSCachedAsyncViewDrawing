@@ -14,7 +14,8 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
 @interface MSCachedAsyncViewDrawing : NSObject
 
 /**
- * @discussion you can use the shared instance to have a shared cache.
+ * You can use the shared instance to have a shared cache.
+ * @note It's perfectly valid to create separate instances of `MSCachedAsyncViewDrawing`, they will just have independent caches.
  */
 + (MSCachedAsyncViewDrawing *)sharedInstance;
 
