@@ -24,6 +24,9 @@ It's also a typical use case for this class, since there are many views on scree
 
 ## How to use it
 
+- Install using [cocoapods](http://cocoapods.org/) by adding `pod 'MSCachedAsyncViewDrawing', '~> 1.0.'` to your Podfile.
+- Or add the `MSCachedAsyncViewDrawing.(h+m)` files to your project.
+
 This is the main method in ```MSCachedAsyncViewDrawing```:
 
 ```objc
