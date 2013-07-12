@@ -19,17 +19,17 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
 + (MSCachedAsyncViewDrawing *)sharedInstance;
 
 /**
- * @discussion this method will call `drawBlock` _on a background thread_ passing a CGRect that you can pass to a `drawRect:` method
+ * This method will call `drawBlock` _on a background thread_ passing a `CGRect` that you can pass to a `drawRect:` method
  * of a view or a layer.
- * Once finished, it'll call the completion block on the main thread with the drawn UIImage object.
+ * Once finished, it'll call the completion block on the main thread with the drawn `UIImage` object.
  * `MSCachedAsyncViewDrawing` objects keep an internal cache so multiple calls to this method with the same `cacheKey`
  * will result in the immediate call of `completionBlock`.
- * @param `cacheKey` make sure you create a string with the paremeters of the view. Two views configured
+ * @param cacheKey make sure you create a string with the paremeters of the view. Two views configured
  * differently (say, different text or font color) should have different cache keys to avoid collisions)
- * @param backgroundColor if you want a transparent image, just pass [UIColor clearColor].
+ * @param backgroundColor if you want a transparent image, just pass `[UIColor clearColor]`.
  * To generate an opaque image, pass a color with alpha = 1.
  * @param drawBlock this method is called from a background thread, so you must pay special attention to the thread safety of
- * anything you do in it. It's safe to use UIKit methods like -[UIImage drawInRect:] or -[NSString drawInRect:].
+ * anything you do in it. It's safe to use UIKit methods like `-[UIImage drawInRect:]` or `-[NSString drawInRect:]`.
  */
 - (void)drawViewAsyncWithCacheKey:(NSString *)cacheKey
                              size:(CGSize)imageSize
@@ -38,9 +38,9 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
                   completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock;
 
 /**
- * @discussion this is the synchronous version of the other method.
+ * This is the synchronous version of the other method.
  * It waits until the image is loaded and returns it instead of calling a completion block.
- * @param `drawBlock` is called on the caller thread.
+ * @param drawBlock is called on the caller thread.
  */
 - (UIImage *)drawViewSyncWithCacheKey:(NSString *)cacheKey
                                  size:(CGSize)imageSize
