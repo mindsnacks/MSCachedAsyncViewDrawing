@@ -8,11 +8,7 @@
 
 #import "MSCachedAsyncViewDrawing.h"
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-    #define MSTreatQueuesAsObjects (0)
-#else
-    #define MSTreatQueuesAsObjects (1)
-#endif
+#define MSTreatQueuesAsObjects OS_OBJECT_USE_OBJC
 
 #if MSTreatQueuesAsObjects
     #define MS_dispatch_queue_t_property_qualifier strong
