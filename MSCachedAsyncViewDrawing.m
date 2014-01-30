@@ -20,9 +20,16 @@
     #define MS_dispatch_queue_t_property_qualifier assign
 #endif
 
+@interface _MSCachedAsyncViewDrawingMemoryImageCache : NSObject <MSCachedAsyncViewDrawingCache>
+{
+    NSCache *_cache;
+}
+
+@end
+
 @interface MSCachedAsyncViewDrawing ()
 
-@property (nonatomic, strong) NSCache *cache;
+@property (nonatomic) id<MSCachedAsyncViewDrawingCache> cache;
 
 @property (nonatomic, MS_dispatch_queue_t_property_qualifier) dispatch_queue_t dispatchQueue;
 
@@ -42,13 +49,19 @@
     return sharedInstance;
 }
 
-- (id)init
+- (instancetype)init
 {
+    return [self initWithCache:[_MSCachedAsyncViewDrawingMemoryImageCache new]];
+}
+
+- (instancetype)initWithCache:(id<MSCachedAsyncViewDrawingCache>)cache
+{
+    NSParameterAssert(cache);
+    
     if ((self = [super init]))
     {
-        self.cache = [[NSCache alloc] init];
-        self.cache.name = @"com.mindsnacks.view_drawing.cache";
-        self.dispatchQueue = dispatch_queue_create("com.mindsnacks.view_drawing.queue", DISPATCH_QUEUE_CONCURRENT);
+        _cache = cache;
+        _dispatchQueue = dispatch_queue_create("com.mindsnacks.view_drawing.queue", DISPATCH_QUEUE_CONCURRENT);
     }
 
     return self;
@@ -70,7 +83,7 @@
              completionBlock:(MSCachedAsyncViewDrawingCompletionBlock)completionBlock
                waitUntilDone:(BOOL)waitUntilDone
 {
-    UIImage *cachedImage = [self.cache objectForKey:cacheKey];
+    UIImage *cachedImage = [self.cache imageForKey:cacheKey];
 
     if (cachedImage)
     {
@@ -82,7 +95,7 @@
     completionBlock = [completionBlock copy];
     
     dispatch_block_t loadImageBlock = ^{
-        BOOL opaque = [self colorIsOpaque:backgroundColor];
+        const BOOL opaque = [self colorIsOpaque:backgroundColor];
 
         UIImage *resultImage = nil;
 
@@ -92,7 +105,7 @@
 
             CGRect rectToDraw = (CGRect){.origin = CGPointZero, .size = imageSize};
 
-            BOOL shouldDrawBackgroundColor = ![backgroundColor isEqual:[UIColor clearColor]];
+            const BOOL shouldDrawBackgroundColor = ![backgroundColor isEqual:[UIColor clearColor]];
 
             if (shouldDrawBackgroundColor)
             {
@@ -110,7 +123,7 @@
         }
         UIGraphicsEndImageContext();
 
-        [self.cache setObject:resultImage forKey:cacheKey];
+        [self.cache setImage:resultImage forKey:cacheKey];
 
         if (waitUntilDone)
         {
@@ -183,6 +196,31 @@
     }
 
     return (alpha == 1.0f);
+}
+
+@end
+
+@implementation _MSCachedAsyncViewDrawingMemoryImageCache
+
+- (id)init
+{
+    if ((self = [super init]))
+    {
+        _cache = [NSCache new];
+        _cache.name = @"com.mindsnacks.view_drawing.cache";
+    }
+    
+    return self;
+}
+
+- (UIImage *)imageForKey:(NSString *)key
+{
+    return [_cache objectForKey:key];
+}
+
+- (void)setImage:(UIImage *)image forKey:(NSString *)key
+{
+    [_cache setObject:image forKey:key];
 }
 
 @end

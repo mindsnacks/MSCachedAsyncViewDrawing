@@ -11,13 +11,27 @@
 typedef void (^MSCachedAsyncViewDrawingDrawBlock)(CGRect frame);
 typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
 
+@protocol MSCachedAsyncViewDrawingCache;
+
 @interface MSCachedAsyncViewDrawing : NSObject
 
 /**
  * You can use the shared instance to have a shared cache.
+ * Uses in-memory caching by default.
  * @note It's perfectly valid to create separate instances of `MSCachedAsyncViewDrawing`, they will just have independent caches.
  */
 + (MSCachedAsyncViewDrawing *)sharedInstance;
+
+/**
+ * Initialize instance using in-memory caching.
+ */
+- (instancetype)init;
+
+/**
+ * Designated initializer.
+ * @param cache: must be thread safe.
+ */
+- (instancetype)initWithCache:(id<MSCachedAsyncViewDrawingCache>)cache;
 
 /**
  * This method will call `drawBlock` _on a background thread_ passing a `CGRect` that you can pass to a `drawRect:` method
@@ -48,5 +62,15 @@ typedef void (^MSCachedAsyncViewDrawingCompletionBlock)(UIImage *drawnImage);
                       backgroundColor:(UIColor *)backgroundColor
                             drawBlock:(MSCachedAsyncViewDrawingDrawBlock)drawBlock;
 
+
+@end
+
+@protocol MSCachedAsyncViewDrawingCache <NSObject>
+
+/**
+ * @return `nil` if the image for `key` is not available.
+ */
+- (UIImage *)imageForKey:(NSString *)key;
+- (void)setImage:(UIImage *)image forKey:(NSString *)key;
 
 @end
