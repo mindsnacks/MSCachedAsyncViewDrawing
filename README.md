@@ -4,7 +4,7 @@ Helper class that allows you to draw views (a)synchronously to a UIImage with ca
 
 ## Description
 
-(This assumes you know a bit about CoreGraphics and how some things like blending work. If not, go read [this post](http://engineering.twitter.com/2012/02/simple-strategies-for-smooth-animation.html) in the Twitter Engineering Blog).
+(This assumes you know a bit about CoreGraphics and how some things like blending work. If not, go read [this post](https://blog.twitter.com/2012/simple-strategies-smooth-animation-iphone) in the Twitter Engineering Blog).
 
 So you have a UITableView in your application that scrolls slow. You decide to implement the cell drawing entirely in CoreGraphics implementing ```-[UIView drawRect:]``` in your cell. This is perfect, until you have to draw images. ```CGContextDrawImage``` is **really slow** compared to using ```UIImageView```.
 
