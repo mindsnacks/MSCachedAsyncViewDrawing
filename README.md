@@ -50,7 +50,7 @@ A subsequent call with the same `cacheKey` will result in the immediate call of 
 
 The cache is implemented using `NSCache`, so you don't have to worry about putting caching too many images, because iOS is going to take care of evicting obejcts as the available memory goes low.
 
-If you prefer to block the UI while the rendering is happening, beacuse you want to make sure that the image view is not empty at any point, you can use this other method, which immediately returns the ```UIImage``` object:
+If you prefer to block the UI while the rendering is happening, because you want to make sure that the image view is not empty at any point, you can use this other method, which immediately returns the ```UIImage``` object:
 
 ```objc
 - (UIImage *)drawViewSyncWithCacheKey:(NSString *)cacheKey
